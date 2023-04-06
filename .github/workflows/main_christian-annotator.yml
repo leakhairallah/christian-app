@@ -31,7 +31,7 @@ jobs:
         run: pip install -r requirements.txt
         
       - name: Run flask server
-        run: python -m flask run
+        run: FLASK_APP=App/app.py flask run
       
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
