@@ -6,7 +6,8 @@ TENANT_ID = env.get("AZURE_TENANT_ID", "")
 CLIENT_ID = env.get("AZURE_CLIENT_ID", "")
 CLIENT_SECRET = env.get("AZURE_CLIENT_SECRET", "")
 
-KEYVAULT_NAME = env.get("AZURE_KEYVAULT_NAME", "")
+KEYVAULT_NAME = env.get("key_vault_name", "")
+KEYVAULT_SECRET_1 = env.get("secret_name_1")
 KEYVAULT_URI = f"https://{KEYVAULT_NAME}.vault.azure.net/"
 
 _credential = ClientSecretCredential(
@@ -17,4 +18,4 @@ _credential = ClientSecretCredential(
 
 _serviceClient = SecretClient(vault_url=KEYVAULT_URI, credential=_credential)
 
-GSPREAD_API_KEY = _serviceClient.get_secret("gpread-api-key").value
+GSPREAD_API_KEY = _serviceClient.get_secret(KEYVAULT_SECRET_1).value
