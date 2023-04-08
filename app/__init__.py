@@ -1,5 +1,6 @@
 import config
 import json
+import os
 
 from flask import Flask, request, jsonify, render_template
 import gspread
@@ -8,15 +9,17 @@ from camel_morph.sandbox.debug_lemma_paradigms import regenerate_signature_lex_r
 from camel_morph.utils import utils
 
 CONFIG_FILE = 'config_debug_lemma_paradigms.json'
+SERVICE_ACCOUNT_PATH = 'service_account.json'
 
 config_json = utils.get_config_file(CONFIG_FILE)
 config_global = config_json['global']
 
-service_account = config.GSPREAD_API_KEY
-with open('service_account.json', 'w') as f:
-    json.dump(jsonify(service_account), f)
+service_account = json.loads(config.GSPREAD_API_KEY)
+with open(SERVICE_ACCOUNT_PATH, 'w') as f:
+    json.dump(service_account, f)
 
-sa = gspread.service_account('service_account.json')
+sa = gspread.service_account(SERVICE_ACCOUNT_PATH)
+os.remove(SERVICE_ACCOUNT_PATH)
 
 def get_config_name(sheet_name):
     if 'Noun-' in sheet_name:
