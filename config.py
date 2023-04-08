@@ -2,10 +2,6 @@ from os import environ as env
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-TENANT_ID = env.get("AZURE_TENANT_ID", "")
-CLIENT_ID = env.get("AZURE_CLIENT_ID", "")
-CLIENT_SECRET = env.get("AZURE_CLIENT_SECRET", "")
-
 KEYVAULT_NAME = env.get("key_vault_name", "")
 KEYVAULT_SECRET_1 = env.get("secret_name_1")
 
