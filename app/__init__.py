@@ -1,5 +1,7 @@
-from flask import Flask, request, jsonify, render_template
+import config
+import json
 
+from flask import Flask, request, jsonify, render_template
 import gspread
 
 from camel_morph.sandbox.debug_lemma_paradigms import regenerate_signature_lex_rows
@@ -7,10 +9,14 @@ from camel_morph.utils import utils
 
 CONFIG_FILE = 'config_debug_lemma_paradigms.json'
 
-config = utils.get_config_file(CONFIG_FILE)
-config_global = config['global']
+config_json = utils.get_config_file(CONFIG_FILE)
+config_global = config_json['global']
 
-sa = gspread.service_account(config_global['service_account'])
+service_account = config.GSPREAD_API_KEY
+with open('service_account.json', 'w') as f:
+    json.dump(jsonify(service_account), f)
+
+sa = gspread.service_account('service_account.json')
 
 def get_config_name(sheet_name):
     if 'Noun-' in sheet_name:
@@ -35,7 +41,7 @@ def regenerate_signature():
     sheets = sh.worksheets()
 
     sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
-    regenerate_signature_lex_rows(sheet, sh, config, config_name)
+    regenerate_signature_lex_rows(sheet, sh, config_json, config_name)
 
     # Return the annotated text as a JSON response
     response = {'sheet': sheet, 'spreadsheet': spreadsheet}
@@ -43,7 +49,7 @@ def regenerate_signature():
 
 @app.route('/')
 def index():
-    sheets = [sheet for config_local in config['local'].values()
+    sheets = [sheet for config_local in config_json['local'].values()
               for sheet in config_local['debugging']['sheets']]
     return render_template('index.html',
                            sheets=sheets)
