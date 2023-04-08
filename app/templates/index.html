@@ -3,6 +3,24 @@
 <head>
 	<title>Annotator Console</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<style>
+		.loader {
+			border: 2px solid #ffffff;
+			border-top: 2px solid #3498db;
+			border-radius: 50%;
+			width: 10px;
+			height: 10px;
+			animation: spin 2s linear infinite;
+			margin-left: 10px;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+	</style>
 </head>
 <body>
 	<h1>Annotator console</h1>
@@ -26,15 +44,29 @@
 		function regenerateSignature() {
 			var sheetName = document.getElementById("sheetName").value;
 			var spreadsheetName = document.getElementById("spreadsheetName").value;
+			var button = document.getElementsByTagName("button")[0];
+			var loader = document.createElement("div");
+			loader.classList.add("loader");
+
+
+			button.disabled = true;
+			button.textContent = "Regenerating Signature...";
+			button.appendChild(loader);
 			$.ajax({
 				url: "/regenerateSignature",
 				type: "POST",
 				data: {"sheetName": sheetName, "spreadsheetName": spreadsheetName},
 				success: function(response) {
+					button.disabled = false;
+					button.textContent = "Regenerate Signature";
 					alert("Response: " + response);
+					button.removeChild(loader);
 				},
 				error: function(xhr, status, error) {
+					button.disabled = false;
+					button.textContent = "Regenerate Signature";
 					alert("Error: " + error);
+					button.removeChild(loader);
 				}
 			});
 		}
