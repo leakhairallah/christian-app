@@ -11,21 +11,23 @@
 	<div>
 		<div>
 			<label for="spreadsheetName">Spreadsheet:</label>
-			<input type="text" style="width: 400px;" id="inputText">
+			<input type="text" style="width: 300px;" id="spreadsheetName" value="Nominals-Sandbox">
+			<label for="spreadsheetName">Sheet:</label>
+			<select id="sheetName" name="sheetName">
+				{% for text in sheets%}
+					<option value={{text}}>{{text}}</option>
+				{% endfor %}
+			</select>
+			<button onclick="regenerateSignature()">Regenerate Signature</button>
 		</div>
-		<div>
-			<label for="sheetName">Sheet:</label>
-			<input type="text" style="width: 400px;"  id="inputText">
-		</div>
-		<button onclick="annotateText()">Annotate Text 1</button>
 	</div>
 
 	<script>
-		function annotateText() {
-			var sheetName = document.getElementById("inputText").value;
-			var spreadsheetName = document.getElementById("inputText").value;
+		function regenerateSignature() {
+			var sheetName = document.getElementById("sheetName").value;
+			var spreadsheetName = document.getElementById("spreadsheetName").value;
 			$.ajax({
-				url: "/annotate",
+				url: "/regenerateSignature",
 				type: "POST",
 				data: {"sheetName": sheetName, "spreadsheetName": spreadsheetName},
 				success: function(response) {

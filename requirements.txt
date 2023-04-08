@@ -1,0 +1,8 @@
+flask
+gspread==5.1.1
+numpy
+pandas
+tqdm
+pyrsistent
+emoji
+camel-morph
