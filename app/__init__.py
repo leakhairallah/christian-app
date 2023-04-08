@@ -44,11 +44,12 @@ def regenerate_signature():
     sheets = sh.worksheets()
 
     sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
-    regenerate_signature_lex_rows(sheet, sh, config_json, config_name)
 
-    # Return the annotated text as a JSON response
-    response = {'sheet': sheet, 'spreadsheet': spreadsheet}
-    return jsonify(response)
+    try:
+        regenerate_signature_lex_rows(sheet, sh, config_json, config_name)
+        return jsonify('SUCCESS')
+    except:
+        return 'FAILED; ERROR:regenerate_signature_lex_rows'
 
 @app.route('/')
 def index():
